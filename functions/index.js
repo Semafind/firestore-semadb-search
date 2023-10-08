@@ -8,18 +8,29 @@
  * https://firebase.google.com/docs/extensions/publishers
  */
 
-const functions = require("firebase-functions");
+import {firestore, https} from "firebase-functions/v1";
+import axios from "axios";
 
-exports.greetTheWorld = functions.https.onRequest((req, res) => {
-  // Here we reference a user-provided parameter
-  // (its value is provided by the user during installation)
-  const consumerProvidedGreeting = process.env.GREETING;
+const SEMADB_HOST = "semadb.p.rapidapi.com";
+const SEMADB_ENDPOINT = "https://" + SEMADB_HOST;
 
-  // And here we reference an auto-populated parameter
-  // (its value is provided by Firebase after installation)
-  const instanceId = process.env.EXT_INSTANCE_ID;
+const axiosInstance = axios.create({
+  baseURL: SEMADB_ENDPOINT,
+  timeout: 1000,
+  headers: {
+    'content-type': 'application/json',
+    'X-RapidAPI-Key': process.env.SEMADB_API_KEY,
+    'X-RapidAPI-Host': SEMADB_HOST,
+  },
+});
 
-  const greeting = `${consumerProvidedGreeting} World from ${instanceId}`;
+export const semadbSync = firestore.document(`/${process.env.FIRESTORE_COLLECTION}/{docId}`).onWrite((change, context) => {
+  const semadbCollection = process.env.SEMADB_COLLECTION;
+  console.log("semadbSync: ", change, context);
+  const docId = context.params.docId;
+  return null;
+});
 
-  res.send(greeting);
+export const semadbSearch = https.onCall(async (data, context) => {
+  console.log("semadbSearch: ", data, context);
 });

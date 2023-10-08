@@ -2,23 +2,21 @@
 # https://firebase.google.com/docs/extensions/reference/extension-yaml
 
 # Identifier for your extension
-# TODO: Replace this with an descriptive name for your extension.
-name: greet-the-world  
+name: semadb-firebase
 version: 0.0.1  # Follow semver versioning
 specVersion: v1beta  # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
-displayName: Greet the world
+displayName: SemaDB Firebase Vector Search
 
 # Brief description of the task your extension performs (~1 sentence)
 description: >-
-  Sends the world a greeting.
+  Perform vector search on Firebase data using SemaDB
 
 license: Apache-2.0  # https://spdx.org/licenses/
 
 # Public URL for the source code of your extension.
-# TODO:  Replace this with your GitHub repo.
-sourceUrl: https://github.com/ORG_OR_USER/REPO_NAME
+sourceUrl: https://github.com/semafind/semadb-firebase
 
 # Specify whether a paid-tier billing plan is required to use your extension.
 # Learn more in the docs: https://firebase.google.com/docs/extensions/reference/extension-yaml#billing-required-field
@@ -32,30 +30,55 @@ billingRequired: true
 # In a `roles` field, list any IAM access roles required for your extension to operate.
 # Learn more in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#roles-field
+roles:
+  - role: datastore.user
+    reason: >-
+      Required to read and write to Firestore
 
 # In the `resources` field, list each of your extension's functions, including the trigger for each function.
 # Learn more in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#resources-field
 resources:
-  - name: greetTheWorld
+  - name: semadbSync
     type: firebaseextensions.v1beta.function
     description: >-
-      HTTP request-triggered function that responds with a specified greeting message
+      Listens to changes in a Firebase database and syncs them to SemaDB
     properties:
-      # httpsTrigger is used for an HTTP triggered function.
+      runtime: "nodejs18"
+      eventTrigger:
+        eventType: providers/cloud.firestore/eventTypes/document.write
+        resource: projects/${PROJECT_ID}/databases/(default)/documents/${param:FIRESTORE_COLLECTION}/{documentID}
+  - name: semadbSearch
+    type: firebaseextensions.v1beta.function
+    description: >-
+      Performs a vector search on SemaDB and returns the results
+    properties:
+      runtime: "nodejs18"
       httpsTrigger: {}
-      runtime: "nodejs16"
+  
 
 # In the `params` field, set up your extension's user-configured parameters.
 # Learn more in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#params-field
 params:
-  - param: GREETING
-    label: Greeting for the world
+  - param: FIRESTORE_COLLECTION 
+    label: Collection to sync documents from
     description: >-
-      What do you want to say to the world?
-      For example, Hello world? or What's up, world?
+      Which Firebase collection should be indexed to SemaDB?
     type: string
-    default: Hello
+    default: mycollection
     required: true
     immutable: false
+  - param: SEMADB_COLLECTION
+    label: SemaDB Collection
+    description: >-
+      Which SemaDB collection should the documents be indexed to?
+    type: string
+    default: mycollection
+    required: true
+    immutable: false
+  - param: SEMADB_API_KEY
+    label: SemaDB API Key
+    description: >-
+      API Key for SemaDB
+    type: secret
