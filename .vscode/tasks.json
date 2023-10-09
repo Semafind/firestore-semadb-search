@@ -6,7 +6,7 @@
         {
             "label": "run-emulator",
             "type": "shell",
-            "command": "cd ${workspaceFolder}/functions/integration-tests && npx firebase emulators:start --project=demo-test",
+            "command": "cd ${workspaceFolder}/functions/integration-tests && firebase emulators:start --project=demo-test",
         }
     ]
 }
