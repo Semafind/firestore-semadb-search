@@ -1,13 +1,25 @@
-const axios = require("axios");
-const chai = require("chai");
+import {assert} from "chai";
+import {handleSemaDBSync} from "../semadb.js";
 
-describe("greet-the-world", () => {
-  it("should respond with the configured greeting", async () => {
-    const expected = "Hello World from greet-the-world";
-
-    const httpFunctionUri = "http://localhost:5001/demo-test/us-central1/ext-greet-the-world-greetTheWorld/";
-    const res = await axios.get(httpFunctionUri);
-
-    return chai.expect(res.data).to.eql(expected);
-  }).timeout(10000);
+describe("semadbSync", () => {
+  it("skips if vectors are the same", async () => {
+    const change = {
+      before: {
+        exists: true,
+        data: () => ({
+          "_semadbPointId": "point1",
+          "vector": [1, 2, 3],
+        }),
+      },
+      after: {
+        exists: true,
+        data: () => ({
+          "_semadbPointId": "point1",
+          "vector": [1, 2, 3],
+        }),
+      },
+    };
+    const res = await handleSemaDBSync(change.before, change.after);
+    assert.isNull(res);
+  });
 });
