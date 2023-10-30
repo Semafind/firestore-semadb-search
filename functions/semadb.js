@@ -175,19 +175,37 @@ export function handleSemaDBSync(oldDocSnap, newDocSnap) {
  * Makes a search request to semadb
  * @param {number[]} vector
  * @param {number} limit
- * @return {Promise<string[]>} Array of document ids
+ * @return {Promise<object[]>} Array of points
  */
 export async function handleSemaDBSearch(vector, limit) {
-  logger.debug("Searching for vector with limit:", limit);
-  const res = await axiosInstance({
-    method: "POST",
-    url: "/search",
-    data: {
-      vector: vector,
-      limit: limit,
-    },
-  }).catch((err) => {
+  if (!isValidVector(vector)) {
+    throw new Error("Invalid vector");
+  }
+  logger.debug("Handling vector search with limit:", limit);
+  try {
+    const res = await axiosInstance({
+      method: "POST",
+      url: "/search",
+      data: {
+        vector: vector,
+        limit: limit,
+      },
+    });
+    // Sample return:
+    // [
+    //  {
+    //    "id": "ba8c42b7-0d11-47f5-9bf8-ddc11d61dda7",
+    //    "distance": 0,
+    //    "metadata": {
+    //      "firestoreDocId": "dcbR9jrc8p81cd0gegSx"
+    //    }
+    //  }
+    // ]
+    //
+    return {"points": res.data.points};
+  } catch (err) {
     logger.error("Error searching for vector:", err?.response?.data);
-  });
-  return res.data.points.map((point) => point.metadata.firestoreDocId);
+    return {"points": [], "error": err?.response?.data?.error};
+  }
+  // -----------------------------
 }
