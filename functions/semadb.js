@@ -72,6 +72,8 @@ function updatePoint(pointId, vector) {
         },
       ],
     },
+  }).then((response) => {
+    logger.debug("Point updated:", response.data);
   }).catch((err) => {
     logger.error("Error updating point:", err?.response?.data);
   });
@@ -90,6 +92,8 @@ function deletePoint(docSnap, pointId) {
     data: {
       ids: [pointId],
     },
+  }).then((response) => {
+    logger.debug("Point deleted:", response.data);
   }).catch((err) => {
     logger.error("Error deleting point:", err?.response?.data);
   });
