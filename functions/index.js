@@ -9,7 +9,7 @@
  */
 
 import {firestore, https} from "firebase-functions/v1";
-import {handleSemaDBSync} from "./semadb.js";
+import {handleSemaDBSync, handleSemaDBSearch} from "./semadb.js";
 
 // eslint-disable-next-line max-len
 export const semadbSync = firestore.document(`/${process.env.FIRESTORE_COLLECTION}/{docId}`).onWrite((change, context) => {
@@ -18,5 +18,5 @@ export const semadbSync = firestore.document(`/${process.env.FIRESTORE_COLLECTIO
 });
 
 export const semadbSearch = https.onCall(async (data, context) => {
-  console.log("semadbSearch: ", data, context);
+  return handleSemaDBSearch(data.vector, data.limit);
 });

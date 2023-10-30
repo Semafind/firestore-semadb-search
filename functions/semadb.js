@@ -1,6 +1,6 @@
 import axios from "axios";
-import {firestore} from "firebase-functions/v1";
-import {logger} from "firebase-functions/v1";
+import {firestore, logger} from "firebase-functions/v1";
+import {FieldValue} from "firebase-admin/firestore";
 import {v4 as uuidv4} from "uuid";
 
 const SEMADB_COLLECTION = process.env.SEMADB_COLLECTION || "mycollection";
@@ -43,12 +43,13 @@ function insertPoint(docSnap, vector) {
         },
       ],
     },
-  });
-  insertPromise.then((response) => {
+  }).then((response) => {
     logger.debug("Point inserted:", response.data);
     return docSnap.ref.update({
       [SEMADB_POINT_ID_FIELD]: newPointId,
     });
+  }).catch((err) => {
+    logger.error("Error inserting point:", err?.response?.data);
   });
   return insertPromise;
 }
@@ -71,6 +72,8 @@ function updatePoint(pointId, vector) {
         },
       ],
     },
+  }).catch((err) => {
+    logger.error("Error updating point:", err?.response?.data);
   });
 }
 
@@ -87,10 +90,12 @@ function deletePoint(docSnap, pointId) {
     data: {
       ids: [pointId],
     },
+  }).catch((err) => {
+    logger.error("Error deleting point:", err?.response?.data);
   });
   if (docSnap.exists) {
     const fieldRemovePromise = docSnap.ref.update({
-      [SEMADB_POINT_ID_FIELD]: firestore.FieldValue.delete(),
+      [SEMADB_POINT_ID_FIELD]: FieldValue.delete(),
     });
     return Promise.all([deletePromise, fieldRemovePromise]);
   }
@@ -134,7 +139,7 @@ function checkIfTwoNumericArraysAreClose(a, b) {
 export function handleSemaDBSync(oldDocSnap, newDocSnap) {
   const oldDoc = oldDocSnap.data();
   const newDoc = newDocSnap.data();
-  const pointId = oldDoc?.[SEMADB_POINT_ID_FIELD];
+  const pointId = newDoc?.[SEMADB_POINT_ID_FIELD];
   const oldVector = oldDoc?.[SEMADB_VECTOR_FIELD];
   const newVector = newDoc?.[SEMADB_VECTOR_FIELD];
   // -----------------------------
@@ -160,4 +165,25 @@ export function handleSemaDBSync(oldDocSnap, newDocSnap) {
   // -----------------------------
   // Nothing of interest for us
   return null;
+}
+
+/**
+ * Makes a search request to semadb
+ * @param {number[]} vector 
+ * @param {number} limit 
+ * @returns {Promise<string[]>} Array of document ids
+ */
+export async function handleSemaDBSearch(vector, limit) {
+  logger.debug("Searching for vector with limit:", limit);
+  const res = await axiosInstance({
+    method: "POST",
+    url: "/search",
+    data: {
+      vector: vector,
+      limit: limit,
+    },
+  }).catch((err) => {
+    logger.error("Error searching for vector:", err?.response?.data);
+  });
+  return res.data.points.map((point) => point.metadata.firestoreDocId);
 }
