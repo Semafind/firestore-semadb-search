@@ -1,5 +1,5 @@
 import axios from "axios";
-import {firestore, logger} from "firebase-functions/v1";
+import {logger} from "firebase-functions/v1";
 import {FieldValue} from "firebase-admin/firestore";
 import {v4 as uuidv4} from "uuid";
 
@@ -169,9 +169,9 @@ export function handleSemaDBSync(oldDocSnap, newDocSnap) {
 
 /**
  * Makes a search request to semadb
- * @param {number[]} vector 
- * @param {number} limit 
- * @returns {Promise<string[]>} Array of document ids
+ * @param {number[]} vector
+ * @param {number} limit
+ * @return {Promise<string[]>} Array of document ids
  */
 export async function handleSemaDBSearch(vector, limit) {
   logger.debug("Searching for vector with limit:", limit);
