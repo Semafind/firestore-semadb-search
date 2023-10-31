@@ -10,20 +10,16 @@ Learn more about writing a POSTINSTALL.md file in the docs:
 https://firebase.google.com/docs/extensions/publishers/user-documentation#writing-postinstall
 -->
 
+# Post-installation Notes
+
+This extension will now sync documents in `${param:FIRESTORE_COLLECTION}` which have a valid vector in the `${param:FIRESTORE_VECTOR_FIELD}` field to SemaDB `${param:SEMADB_COLLECTION}` collection.
+
+Please refer to [callable functions](https://firebase.google.com/docs/functions/callable?gen=1st#call_the_function) to make a search request using `semadbSearch` function from your application.
+
 # See it in action
 
-You can test out this extension right away!
+Create or edit a document in `${param:FIRESTORE_COLLECTION}` with a valid vector `${param:FIRESTORE_VECTOR_FIELD}` and the extension will make a request to SemaDB to index the document. The document should now have a `_semadbPointId` field.
 
-Visit the following URL:
-${function:greetTheWorld.url}
-
-# Using the extension
-
-When triggered by an HTTP request, this extension responds with the following specified greeting: "${param:GREETING} World from ${param:EXT_INSTANCE_ID}".
-
-To learn more about HTTP functions, visit the [functions documentation](https://firebase.google.com/docs/functions/http-events).
-
-<!-- We recommend keeping the following section to explain how to monitor extensions with Firebase -->
 # Monitoring
 
 As a best practice, you can [monitor the activity](https://firebase.google.com/docs/extensions/manage-installed-extensions#monitor) of your installed extension, including checks on its health, usage, and logs.

@@ -7,11 +7,11 @@ version: 0.0.1  # Follow semver versioning
 specVersion: v1beta  # Version of the Firebase Extensions specification
 
 # Friendly display name for your extension (~3-5 words)
-displayName: SemaDB Firebase Vector Search
+displayName: Firestore Vector Search with SemaDB
 
 # Brief description of the task your extension performs (~1 sentence)
 description: >-
-  Perform vector search on Firebase data using SemaDB
+  Indexes data from Firebase Firestore into SemaDB for vector search
 
 license: Apache-2.0  # https://spdx.org/licenses/
 
