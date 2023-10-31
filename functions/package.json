@@ -1,6 +1,6 @@
 {
-  "name": "greet-the-world",
-  "description": "Greet the world",
+  "name": "semadb-firebase",
+  "description": "SemaDB Firebase Vector Search",
   "main": "index.js",
   "type": "module",
   "dependencies": {
@@ -10,6 +10,7 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
+    "axios-mock-adapter": "^1.22.0",
     "chai": "^4.3.10",
     "eslint": "^8.51.0",
     "eslint-config-google": "^0.14.0",
@@ -21,7 +22,8 @@
     "lint": "./node_modules/.bin/eslint --max-warnings=0 ..",
     "lint:fix": "./node_modules/.bin/eslint --max-warnings=0 --fix ..",
     "mocha": "mocha '**/*.spec.js'",
-    "test": "(cd integration-tests && firebase emulators:exec 'npm run mocha' -P demo-test)"
+    "test:emulator": "(cd integration-tests && firebase emulators:exec 'npm run mocha' -P demo-test)",
+    "test": "(cd integration-tests && npm run mocha)"
   },
   "private": true
 }

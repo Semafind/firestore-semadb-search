@@ -11,7 +11,8 @@ const SEMADB_POINT_ID_FIELD = "_semadbPointId";
 const POINTS_URL = SEMADB_ENDPOINT + "/collections/" +
   SEMADB_COLLECTION + "/points";
 
-const axiosInstance = axios.create({
+// We export axiosInstance so we can mock it in tests
+export const axiosInstance = axios.create({
   baseURL: POINTS_URL,
   timeout: 60000, // 60 seconds
   headers: {
