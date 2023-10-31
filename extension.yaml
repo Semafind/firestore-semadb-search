@@ -92,6 +92,7 @@ params:
     description: >-
       API Key for SemaDB
     type: secret
+    required: true
   - param: LOCATION
     label: Cloud Functions location
     description: >-
