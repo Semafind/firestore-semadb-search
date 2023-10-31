@@ -1,5 +1,6 @@
 import {assert} from "chai";
-import {handleSemaDBSync, axiosInstance, handleSemaDBSearch} from "../semadb.js";
+import {handleSemaDBSync, handleSemaDBSearch} from "../semadb.js";
+import {axiosInstance} from "../semadb.js";
 import MockAdapter from "axios-mock-adapter";
 
 const mock = new MockAdapter(axiosInstance);
