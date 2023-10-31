@@ -6,7 +6,7 @@ import {v4 as uuidv4} from "uuid";
 const SEMADB_COLLECTION = process.env.SEMADB_COLLECTION || "mycollection";
 const SEMADB_HOST = "semadb.p.rapidapi.com";
 const SEMADB_ENDPOINT = "https://" + SEMADB_HOST;
-const SEMADB_VECTOR_FIELD = "vector";
+const FIRESTORE_VECTOR_FIELD = process.env.FIRESTORE_VECTOR_FIELD || "vector";
 const SEMADB_POINT_ID_FIELD = "_semadbPointId";
 const POINTS_URL = SEMADB_ENDPOINT + "/collections/" +
   SEMADB_COLLECTION + "/points";
@@ -144,8 +144,8 @@ export function handleSemaDBSync(oldDocSnap, newDocSnap) {
   const oldDoc = oldDocSnap.data();
   const newDoc = newDocSnap.data();
   const pointId = newDoc?.[SEMADB_POINT_ID_FIELD];
-  const oldVector = oldDoc?.[SEMADB_VECTOR_FIELD];
-  const newVector = newDoc?.[SEMADB_VECTOR_FIELD];
+  const oldVector = oldDoc?.[FIRESTORE_VECTOR_FIELD];
+  const newVector = newDoc?.[FIRESTORE_VECTOR_FIELD];
   // -----------------------------
   if (!pointId && isValidVector(newVector)) {
     // Insert point

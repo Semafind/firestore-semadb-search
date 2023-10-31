@@ -77,6 +77,14 @@ params:
     default: mycollection
     required: true
     immutable: false
+  - param: FIRESTORE_VECTOR_FIELD
+    label: Property to use as vector
+    description: >-
+      Which object property should be used as the vector?
+    type: string
+    default: vector
+    required: true
+    immutable: false
   - param: SEMADB_API_KEY
     label: SemaDB API Key
     description: >-
