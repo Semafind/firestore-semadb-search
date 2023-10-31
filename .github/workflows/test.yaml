@@ -21,6 +21,7 @@ jobs:
         with:
           node-version: "18.18.0"
           cache: "npm"
+          cache-dependency-path: "functions/package-lock.json"
 
       - name: CI info
         run: |
