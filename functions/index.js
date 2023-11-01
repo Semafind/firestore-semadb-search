@@ -1,13 +1,3 @@
-/*
- * This template contains a HTTP function that
- * responds with a greeting when called
- *
- * Reference PARAMETERS in your functions code with:
- * `process.env.<parameter-name>`
- * Learn more about building extensions in the docs:
- * https://firebase.google.com/docs/extensions/publishers
- */
-
 import {firestore, https} from "firebase-functions/v1";
 import {handleSemaDBSync, handleSemaDBSearch} from "./semadb.js";
 
