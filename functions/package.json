@@ -1,5 +1,5 @@
 {
-  "name": "semadb-firebase",
+  "name": "firestore-semadb-search",
   "description": "SemaDB Firebase Vector Search",
   "main": "index.js",
   "type": "module",

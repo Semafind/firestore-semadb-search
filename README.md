@@ -50,7 +50,7 @@ The structure is mostly dictated by the firebase tool that generates the skeleto
 
 ## Manual live testing
 
-If you edit `semadb-firebase.secret.local` with your actual [SemaDB API key](https://rapidapi.com/semafind-semadb/api/semadb), running the emulators will make requests to the public live instance.
+If you edit `firestore-semadb-search.secret.local` with your actual [SemaDB API key](https://rapidapi.com/semafind-semadb/api/semadb), running the emulators will make requests to the public live instance.
 
 1. Create a collection on the public API using the [interactive playground](https://rapidapi.com/semafind-semadb/api/semadb) named `mycollection`.
 2. In the Firestore emulator, create a collection called `mycollection` and a document with a `vector` field with 2 numbers. Here 2 is the default vector size in the public API, it should match the SemaDB collection vector size.

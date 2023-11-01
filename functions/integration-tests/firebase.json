@@ -12,6 +12,6 @@
     }
   },
   "extensions": {
-    "semadb-firebase": "../.."
+    "firestore-semadb-search": "../.."
   }
 }
