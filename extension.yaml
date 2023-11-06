@@ -35,6 +35,10 @@ roles:
     reason: >-
       Required to read and write to Firestore
 
+externalServices:
+  - name: SemaDB Cloud
+    pricingUri: https://rapidapi.com/semafind-semadb/api/semadb/pricing
+
 # In the `resources` field, list each of your extension's functions, including the trigger for each function.
 # Learn more in the docs:
 # https://firebase.google.com/docs/extensions/reference/extension-yaml#resources-field
