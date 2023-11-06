@@ -12,6 +12,11 @@
             "label": "call-search",
             "type": "shell",
             "command": "curl -XPOST -H \"Content-type: application/json\" -d '{\"data\": {\"vector\": [1,2]}}' 'http://127.0.0.1:5001/demo-test/us-central1/ext-firestore-semadb-search-semadbSearch'"
+        },
+        {
+            "label": "publish-ext",
+            "type": "shell",
+            "command": "firebase ext:dev:upload semafind/firestore-semadb-search"
         }
     ]
 }
