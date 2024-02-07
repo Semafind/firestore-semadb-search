@@ -3,8 +3,11 @@
 
 # Identifier for your extension
 name: firestore-semadb-search
-version: 0.0.3  # Follow semver versioning
+version: 0.0.4  # Follow semver versioning
 specVersion: v1beta  # Version of the Firebase Extensions specification
+
+tags: [search, ai]
+icon: icon.png
 
 # Friendly display name for your extension (~3-5 words)
 displayName: Firestore Vector Search with SemaDB
@@ -14,6 +17,11 @@ description: >-
   Indexes data from Firebase Firestore into SemaDB for vector search
 
 license: Apache-2.0  # https://spdx.org/licenses/
+
+author:
+  authorName: SemaFind
+  email: support@semafind.com
+  url: https://semafind.com
 
 # Public URL for the source code of your extension.
 sourceUrl: https://github.com/semafind/firestore-semadb-search

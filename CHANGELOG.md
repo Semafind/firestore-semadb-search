@@ -1,3 +1,6 @@
+## Version 0.0.4
+- Update extension yaml with icon, author, tags
+
 ## Version 0.0.3
 - Update package dependencies to address follow-redirects package issue
 
