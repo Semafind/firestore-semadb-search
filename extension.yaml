@@ -3,7 +3,7 @@
 
 # Identifier for your extension
 name: firestore-semadb-search
-version: 0.0.4  # Follow semver versioning
+version: 0.0.5  # Follow semver versioning
 specVersion: v1beta  # Version of the Firebase Extensions specification
 
 tags: [search, ai]
