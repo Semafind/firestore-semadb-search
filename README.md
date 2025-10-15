@@ -1,6 +1,6 @@
 # SemaDB Firebase Firestore Vector Search
 
-SemaDB Firebase extension is a thin wrapper around the public [SemaDB API](https://rapidapi.com/semafind-semadb/api/semadb). It attempts to:
+SemaDB Firebase extension is a thin wrapper around the public [SemaDB API](https://rapidapi.com/semafind-semadb/api/semadb) version 2. It attempts to:
 
 - Sync documents in Firestore with a valid vector to SemaDB. It only stores the document ID and the vector without sending other document data.
 - Provides a [callable function](https://firebase.google.com/docs/functions/callable?gen=1st#call_the_function) to perform vector search within a Firebase application.
@@ -9,8 +9,7 @@ SemaDB Firebase extension is a thin wrapper around the public [SemaDB API](https
 
 Please refer to `PREINSTALL.md` for more information on how to install and use the extension.
 
-
-# Contributing
+## Contributing
 
 Thank you for considering to contribute! This repo is hopefully structured in an easy-to-understand manner and you can get started quickly.
 
@@ -38,7 +37,6 @@ cd integration-tests && firebase emulators:start --project=demo-test
 ```
 
 You can now navigate to the [emulator UI](http://localhost:4000) to see the emulators running.
-
 
 ## Repo structure
 
