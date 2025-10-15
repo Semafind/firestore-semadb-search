@@ -7,7 +7,9 @@ const SEMADB_COLLECTION = process.env.SEMADB_COLLECTION || "mycollection";
 const SEMADB_HOST = "semadb.p.rapidapi.com";
 const SEMADB_ENDPOINT = "https://" + SEMADB_HOST;
 const FIRESTORE_VECTOR_FIELD = process.env.FIRESTORE_VECTOR_FIELD || "vector";
+const SEMADB_VECTOR_FIELD = process.env.SEMADB_VECTOR_FIELD || "vector";
 const SEMADB_POINT_ID_FIELD = "_semadbPointId";
+const SEMADB_TO_FIRESTORE_POINT_ID_FIELD = "firestoreDocId";
 const POINTS_URL = SEMADB_ENDPOINT + "/collections/" +
   SEMADB_COLLECTION + "/points";
 
@@ -36,11 +38,9 @@ function insertPoint(docSnap, vector) {
     data: {
       points: [
         {
-          id: newPointId,
-          vector: vector,
-          metadata: {
-            firestoreDocId: docSnap.id,
-          },
+          _id: newPointId,
+          [SEMADB_VECTOR_FIELD]: vector,
+          [SEMADB_TO_FIRESTORE_POINT_ID_FIELD]: docSnap.id,
         },
       ],
     },
@@ -68,8 +68,8 @@ function updatePoint(pointId, vector) {
     data: {
       points: [
         {
-          id: pointId,
-          vector: vector,
+          _id: pointId,
+          [SEMADB_VECTOR_FIELD]: vector,
         },
       ],
     },
@@ -144,28 +144,29 @@ function checkIfTwoNumericArraysAreClose(a, b) {
 export function handleSemaDBSync(oldDocSnap, newDocSnap) {
   const oldDoc = oldDocSnap.data();
   const newDoc = newDocSnap.data();
-  const pointId = newDoc?.[SEMADB_POINT_ID_FIELD];
+  const oldPointId = oldDoc?.[SEMADB_POINT_ID_FIELD];
+  const newPointId = newDoc?.[SEMADB_POINT_ID_FIELD];
   const oldVector = oldDoc?.[FIRESTORE_VECTOR_FIELD];
   const newVector = newDoc?.[FIRESTORE_VECTOR_FIELD];
   // -----------------------------
-  if (!pointId && isValidVector(newVector)) {
+  if (!newPointId && isValidVector(newVector)) {
     // Insert point
     logger.debug("Inserting point:", newDocSnap.id);
     return insertPoint(newDocSnap, newVector);
   }
   // -----------------------------
-  if (pointId && !isValidVector(newVector)) {
+  if (oldPointId && !isValidVector(newVector)) {
     // Delete point
-    logger.debug("Deleting point:", pointId);
-    return deletePoint(newDocSnap, pointId);
+    logger.debug("Deleting point:", oldPointId);
+    return deletePoint(newDocSnap, oldPointId);
   }
   // -----------------------------
-  if (pointId && isValidVector(newVector) &&
+  if (newPointId && isValidVector(newVector) &&
     isValidVector(oldVector) &&
     !checkIfTwoNumericArraysAreClose(oldVector, newVector)) {
     // Update point
-    logger.debug("Updating point:", pointId);
-    return updatePoint(pointId, newVector);
+    logger.debug("Updating point:", newPointId);
+    return updatePoint(newPointId, newVector);
   }
   // -----------------------------
   // Nothing of interest for us
@@ -180,7 +181,10 @@ export function handleSemaDBSync(oldDocSnap, newDocSnap) {
  */
 export async function handleSemaDBSearch(vector, limit) {
   if (!isValidVector(vector)) {
-    throw new Error("Invalid vector");
+    throw new Error("Invalid search vector");
+  }
+  if (typeof limit !== "number" || limit <= 0 || limit > 75) {
+    limit = 10;
   }
   logger.debug("Handling vector search with limit:", limit);
   try {
@@ -188,22 +192,22 @@ export async function handleSemaDBSearch(vector, limit) {
       method: "POST",
       url: "/search",
       data: {
-        vector: vector,
-        limit: limit,
+        query: {
+          property: SEMADB_VECTOR_FIELD,
+          vectorVamana: {
+            vector,
+            operator: "near",
+            searchSize: 75,
+            limit,
+          }
+        },
+        select: [SEMADB_TO_FIRESTORE_POINT_ID_FIELD],
+        limit,
       },
     });
     // Sample return:
-    // [
-    //  {
-    //    "id": "ba8c42b7-0d11-47f5-9bf8-ddc11d61dda7",
-    //    "distance": 0,
-    //    "metadata": {
-    //      "firestoreDocId": "dcbR9jrc8p81cd0gegSx"
-    //    }
-    //  }
-    // ]
-    //
-    return {"points": res.data.points};
+    // {"points":[{"_distance":10.399999,"_hybridScore":-10.399999,"_id":"b36cf84c-c857-4f1d-bc2a-fcba1cbaefc9"}]}
+    return res.data;
   } catch (err) {
     logger.error("Error searching for vector:", err?.response?.data);
     return {"points": [], "error": err?.response?.data?.error};

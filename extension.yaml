@@ -91,6 +91,14 @@ params:
     default: mycollection
     required: true
     immutable: false
+  - param: SEMADB_VECTOR_FIELD
+    label: SemaDB Vector Field
+    description: >-
+      Which field in SemaDB should be used as the vector? You need to create this during collection setup in SemaDB.
+    type: string
+    default: vector
+    required: true
+    immutable: false
   - param: FIRESTORE_VECTOR_FIELD
     label: Property to use as vector
     description: >-
