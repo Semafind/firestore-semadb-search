@@ -1,5 +1,11 @@
 # SemaDB Firebase Firestore Vector Search
 
+![Status: Archived](https://img.shields.io/badge/status-archived-red.svg)
+
+> **This extension is archived and no longer maintained.** Given it is a very thin wrapper and easy to implement manually, we are archiving this repo as a reference. You may also want to consider vector search options directly inside [Firebase](https://firebase.google.com/docs/firestore/vector-search) as SemaDB focuses on on-prem, edge and custom deployments.
+
+---
+
 SemaDB Firebase extension is a thin wrapper around the public [SemaDB API](https://rapidapi.com/semafind-semadb/api/semadb) version 2. It attempts to:
 
 - Sync documents in Firestore with a valid vector to SemaDB. It only stores the document ID and the vector without sending other document data.
